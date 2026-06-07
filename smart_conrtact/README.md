@@ -1,57 +1,48 @@
-# Sample Hardhat 3 Project (`mocha` and `ethers`)
+# Transactions Smart Contract Project
 
-This project showcases a Hardhat 3 project using `mocha` for tests and the `ethers` library for Ethereum interactions.
+This project contains the Solidity smart contract and the Hardhat configuration for the Transactions Web 3.0 application.
 
-To learn more about Hardhat 3, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3](https://hardhat.org/hardhat3-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
+## Project Structure
 
-## Project Overview
-
-This example project includes:
-
-- A simple Hardhat configuration file.
-- Foundry-compatible Solidity unit tests.
-- TypeScript integration tests using `mocha` and ethers.js
-- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
+- `contracts/Transactions.sol`: The core Solidity smart contract managing the transactions.
+- `scripts/deploy.js`: A script to deploy the `Transactions` contract.
+- `test/sample-test.js`: Unit tests for the `Transactions` contract.
+- `hardhat.config.js`: Configuration file for compilation and networks.
 
 ## Usage
 
-### Running Tests
+### 1. Installation
 
-To run all the tests in the project, execute the following command:
+Install dependencies inside this directory:
+
+```shell
+npm install
+```
+
+### 2. Compilation
+
+Compile the Solidity contracts:
+
+```shell
+npx hardhat compile
+```
+
+This will compile the contracts and generate the compilation artifacts in `artifacts/contracts/Transactions.sol/Transactions.json`.
+
+### 3. Running Tests
+
+Run the unit tests to verify contract functionality:
 
 ```shell
 npx hardhat test
 ```
 
-You can also selectively run the Solidity or `mocha` tests:
+### 4. Deployment
+
+Deploy the contract to a local/test network (e.g. Sepolia):
+
+Ensure you create a `.env` file with your environment variables (e.g., `SEPOLIA_RPC_URL` and `PRIVATE_KEY`).
 
 ```shell
-npx hardhat test solidity
-npx hardhat test mocha
-```
-
-### Make a deployment to Sepolia
-
-This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
-
-To run the deployment to a local chain:
-
-```shell
-npx hardhat ignition deploy ignition/modules/Counter.ts
-```
-
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
-
-You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
-
-To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
-
-```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
-```
-
-After setting the variable, you can run the deployment with the Sepolia network:
-
-```shell
-npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
+npx hardhat run scripts/deploy.js --network sepolia
 ```
