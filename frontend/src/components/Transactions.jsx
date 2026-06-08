@@ -1,46 +1,71 @@
 import React, { useContext } from "react";
 
 import { TransactionContext } from "../context/TransactionContext";
-
-import useFetch from "../hooks/useFetch";
-import dummyData from "../utils/dummyData";
 import { shortenAddress } from "../utils/shortenAddress";
+import { FiArrowUpRight, FiMessageSquare } from "react-icons/fi";
+import { SiEthereum } from "react-icons/si";
 
-const TransactionsCard = ({ addressTo, addressFrom, timestamp, message, keyword, amount, url }) => {
-  const gifUrl = useFetch({ keyword });
-
+const TransactionsCard = ({ addressTo, addressFrom, timestamp, message, amount }) => {
   return (
-    <div className="bg-[#181918] m-4 flex flex-1
-      2xl:min-w-[450px]
-      2xl:max-w-[500px]
-      sm:min-w-[270px]
-      sm:max-w-[300px]
-      min-w-full
-      flex-col p-3 rounded-md hover:shadow-2xl"
+    <div className="bg-[#181918] w-full max-w-[350px] flex flex-col p-5 rounded-2xl hover:shadow-2xl border border-gray-800 transition-all duration-300 hover:border-gray-700"
     >
-      <div className="flex flex-col items-center w-full mt-3">
-        <div className="display-flex justify-start w-full mb-6 p-2">
-          <a href={`https://ropsten.etherscan.io/address/${addressFrom}`} target="_blank" rel="noreferrer">
-            <p className="text-white text-base">From: {shortenAddress(addressFrom)}</p>
-          </a>
-          <a href={`https://ropsten.etherscan.io/address/${addressTo}`} target="_blank" rel="noreferrer">
-            <p className="text-white text-base">To: {shortenAddress(addressTo)}</p>
-          </a>
-          <p className="text-white text-base">Amount: {amount} ETH</p>
-          {message && (
-            <>
-              <br />
-              <p className="text-white text-base">Message: {message}</p>
-            </>
-          )}
+      <div className="flex flex-col w-full h-full justify-between">
+        {/* Card Header with Icon and Amount */}
+        <div className="flex justify-between items-center w-full mb-4">
+          <div className="w-10 h-10 rounded-full bg-blue-900/40 border border-blue-500/30 flex justify-center items-center">
+            <SiEthereum className="text-[#37c7da]" fontSize={18} />
+          </div>
+          <div className="text-right">
+            <p className="text-gray-400 text-xs font-light">Amount</p>
+            <p className="text-[#37c7da] text-xl font-semibold">{amount} ETH</p>
+          </div>
         </div>
-        <img
-          src={gifUrl || url}
-          alt="nature"
-          className="w-full h-64 2xl:h-96 rounded-md shadow-lg object-cover"
-        />
-        <div className="bg-black p-3 px-5 w-max rounded-3xl -mt-5 shadow-2xl">
-          <p className="text-[#37c7da] font-bold">{timestamp}</p>
+
+        {/* Addresses Info */}
+        <div className="flex flex-col gap-2 bg-black/30 p-3 rounded-xl mb-4 border border-white/5">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-400 text-xs">From:</span>
+            <a 
+              href={`https://sepolia.etherscan.io/address/${addressFrom}`} 
+              target="_blank" 
+              rel="noreferrer"
+              className="text-[#5b9eff] hover:text-[#7fb3ff] text-sm flex items-center gap-1 transition-colors"
+            >
+              {shortenAddress(addressFrom)}
+              <FiArrowUpRight size={14} />
+            </a>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-400 text-xs">To:</span>
+            <a 
+              href={`https://sepolia.etherscan.io/address/${addressTo}`} 
+              target="_blank" 
+              rel="noreferrer"
+              className="text-[#5b9eff] hover:text-[#7fb3ff] text-sm flex items-center gap-1 transition-colors"
+            >
+              {shortenAddress(addressTo)}
+              <FiArrowUpRight size={14} />
+            </a>
+          </div>
+        </div>
+
+        {/* Message (if exists) */}
+        {message ? (
+          <div className="flex flex-col gap-1 bg-white/5 p-3 rounded-xl mb-4 border border-white/5">
+            <div className="flex items-center gap-1.5 text-gray-400 text-xs mb-1">
+              <FiMessageSquare size={12} />
+              <span>Message:</span>
+            </div>
+            <p className="text-gray-200 text-sm italic break-words">"{message}"</p>
+          </div>
+        ) : (
+          <div className="mb-4 text-transparent select-none text-xs">-</div>
+        )}
+
+        {/* Card Footer with Timestamp */}
+        <div className="flex justify-between items-center mt-auto pt-3 border-t border-white/5">
+          <span className="text-gray-500 text-xs font-semibold">TIMESTAMP</span>
+          <span className="text-gray-400 text-xs font-semibold">{timestamp}</span>
         </div>
       </div>
     </div>
@@ -52,7 +77,7 @@ const Transactions = () => {
 
   return (
     <div className="flex w-full justify-center items-center 2xl:px-20 gradient-bg-transactions">
-      <div className="flex flex-col md:p-12 py-12 px-4">
+      <div className="flex flex-col md:p-12 py-12 px-4 w-full items-center">
         {currentAccount ? (
           <h3 className="text-white text-3xl text-center my-2">
             Latest Transactions
@@ -63,8 +88,8 @@ const Transactions = () => {
           </h3>
         )}
 
-        <div className="flex flex-wrap justify-center items-center mt-10">
-          {[...dummyData, ...transactions].reverse().map((transaction, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-center justify-items-center mt-10 w-full max-w-[1200px]">
+          {[...transactions].reverse().map((transaction, i) => (
             <TransactionsCard key={i} {...transaction} />
           ))}
         </div>

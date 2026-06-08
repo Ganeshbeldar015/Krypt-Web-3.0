@@ -143,6 +143,25 @@ export const TransactionsProvider = ({ children }) => {
   useEffect(() => {
     checkIfWalletIsConnect();
     checkIfTransactionsExists();
+
+    if (ethereum) {
+      const handleAccountsChanged = (accounts) => {
+        if (accounts.length > 0) {
+          setCurrentAccount(accounts[0]);
+          getAllTransactions();
+        } else {
+          setCurrentAccount("");
+        }
+      };
+
+      ethereum.on("accountsChanged", handleAccountsChanged);
+
+      return () => {
+        if (ethereum.removeListener) {
+          ethereum.removeListener("accountsChanged", handleAccountsChanged);
+        }
+      };
+    }
   }, [transactionCount]);
 
   return (
